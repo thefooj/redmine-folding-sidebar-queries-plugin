@@ -1,3 +1,50 @@
-= raz_hacks
+= Redmine Folding Sidebar Queries Plugin
 
-Description goes here
+This simple (somewhat hackish) plugin changes the Redmine right navigation custom queries list into something more manageable.  
+
+I found that the list of queries got really long, especially since 'public' is binary as opposed to being sharable to certain users.  In our case, at Razoo.com, our QA, Product, and Engineering team all had different queries and they were getting jumbled up.
+
+This looks through the list of queries that are normally outputted in a flat list, and then converts it into a collapsed list that can expand-contract client side.  The parent level is determined by anything preceding a colon.  
+
+So, if your list is:
+
+* Iteration Planning: sprint backlog (stories only)
+* Iteration Planning: sprint backlog by developer
+* Release Planning: Rel 1.2 items
+* Release Planning: Rel 1.2 bugs only
+
+Then it'll automatically create a list that looks like:
+
+* > Iteration Planning ...
+** sprint backlog (stories only)
+** sprint backlog by developer
+* > Release Planning ...
+** Rel 1.2 items
+** Rel 1.2 bugs only
+
+... and the parent categories are clickable links that expand/contract client-side
+
+
+= Installation
+
+* Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins
+* cd to redmine's vendor/plugin path
+* git clone this repo there (git clone git://github.com/thefooj/Redmine-Folding-Sidebar-Queries-Plugin redmine-folding-sidebar-queries-plugin)
+* No migrations or anything needed -- 
+* Restart your web servers (passenger, mongrels, etc)
+* No additional configuration is necessary.
+
+
+= Approach (and apology)
+
+This was done really quickly, so my approach was somewhat hack-ish.  Basically I use the view hooks to put div tags around the normal queries list, and then just <div id=... style="display:none;"> it (hide it).
+
+As part of the the final view hook in the sidebar, I insert my own code which mimics the normal sidebar code, but adds some logic to parse out parent categories and create the tree structrue as an unordered list.
+
+To keep things simple, I kept the limitation of having 1 level deep only.  I also figure that if you have too many levels, your Redmine config might be too comples :-).
+
+To add to the hackish-ness, there is some inline CSS/javascript that doesn't conform to how Eric has beautifully set up Redmine.  
+
+My apologies... but I hope this comes handy to someone out there.
+
+
